@@ -58,16 +58,16 @@ class CubicSpline(Recalibrate):
     def __init__(self, minimum_frequency, maximum_frequency, n_points):
         self.params = dict()
         self.n_points = n_points
-        self.spline_points = np.logspace(minimum_frequency, maximum_frequency, n_points)
+        self.spline_points = np.logspace(np.log(minimum_frequency), np.log(maximum_frequency), n_points)
 
     def apply_calibration(self, strain):
         amplitude_parameters = [self.params['amplitude_{}'.format(ii)] for ii in range(self.n_points)]
         amplitude_spline = UnivariateSpline(self.spline_points, amplitude_parameters)
-        delta_amplitude = amplitude_spline(strain.get_sample_frequencies)
+        delta_amplitude = amplitude_spline(strain.sample_frequencies.numpy())
 
         phase_parameters = [self.params['phase_{}'.format(ii)] for ii in range(self.n_points)]
         phase_spline = UnivariateSpline(self.spline_points, phase_parameters)
-        delta_phase = phase_spline(strain.get_sample_frequencies)
+        delta_phase = phase_spline(strain.sample_frequencies.numpy())
 
         strain_adjusted = strain * (1 + delta_amplitude) * (2 + 1j * delta_phase) / (2 - 1j * delta_phase)
 
