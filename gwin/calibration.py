@@ -44,7 +44,7 @@ class Recalibrate(object):
         """
         return strain
 
-    def map_to_adjust(self, strain, **params):
+    def map_to_adjust(self, strain, prefix='recalib_', **params):
         """Map an input dictionary of sampling parameters to the
         adjust_strain function by filtering the dictionary for the
         calibration parameters, then calling adjust_strain.
@@ -52,7 +52,9 @@ class Recalibrate(object):
         Parameters
         ----------
         strain : FrequencySeries
-                The strain to be recalibrated.
+            The strain to be recalibrated.
+        prefix: str
+            Prefix for calibration parameter names
         params : dict
             Dictionary of sampling parameters which includes
             calibration parameters.
@@ -62,7 +64,7 @@ class Recalibrate(object):
             The recalibrated strain.
         """
 
-        self.params.update({key[8:]: params[key] for key in params if key[:8] == 'recalib_'})
+        self.params.update({key[8:]: params[key] for key in params if key[:8] == prefix})
 
         strain_adjusted = self.apply_calibration(strain)
 
