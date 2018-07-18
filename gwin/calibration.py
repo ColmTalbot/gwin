@@ -23,6 +23,8 @@ from pycbc.types import FrequencySeries
 
 class Recalibrate(object):
 
+    name = 'none'
+
     def __init__(self):
         self.params = dict()
         pass
@@ -93,9 +95,9 @@ class Recalibrate(object):
         """
         all_params = dict(cp.items(section))
         params = {key[3:]: all_params[key] for key in all_params if ifo in key}
-        params.pop('{}-name'.format(ifo))
+        model = params.pop('{}-name'.format(ifo))
 
-        return cls(**params)
+        return all_models[model](**params)
 
 
 class CubicSpline(Recalibrate):
@@ -137,3 +139,8 @@ class CubicSpline(Recalibrate):
 
         return strain_adjusted
 
+
+all_models = {
+    Recalibrate.name: Recalibrate,
+    CubicSpline.name: CubicSpline
+}
