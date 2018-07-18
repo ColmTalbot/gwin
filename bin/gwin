@@ -199,9 +199,9 @@ with ctx:
     # get ifo-specific instances of calibration model
     if cp.has_section('calibration'):
         logging.info("Initializing calibration model")
-        recalib = {ifo : Recalibrate.from_config(cp, ifo, section='calibration') for
-                   ifo in opts.instruments}
-        model_args['recalib'] = recalib
+        recalibration = {ifo: Recalibrate.from_config(cp, ifo, section='calibration') for
+                         ifo in opts.instruments}
+        model_args['recalibration'] = recalibration
 
     # get gates for templates
     gates = strain.gates_from_cli(opts)
