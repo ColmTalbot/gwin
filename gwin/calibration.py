@@ -70,6 +70,31 @@ class Recalibrate(object):
 
         return strain_adjusted
 
+    @classmethod
+    def from_config(cls, cp, ifo, section):
+        """Read a config file to get calibration options and transfer
+        functions which will be used to intialize the model.
+
+        Parameters
+        ----------
+        cp : WorkflowConfigParser
+            An open config file.
+        ifo : string
+            The detector (H1, L1) for which the calibration model will
+            be loaded.
+        section : string
+            The section name in the config file from which to retrieve
+            the calibration options.
+        Return
+        ------
+        instance
+            An instance of the class.
+        """
+        all_params = dict(cp.items(section))
+        params = {key[3:]: all_params[key] for key in all_params if ifo in key}
+
+        return cls(**params)
+
 
 class CubicSpline(Recalibrate):
 
