@@ -44,7 +44,7 @@ class Recalibrate(object):
         """
         return strain
 
-    def map_to_adjust(self, strain, **params):
+    def map_to_adjust(self, strain, prefix='recalib_', **params):
         """Map an input dictionary of sampling parameters to the
         adjust_strain function by filtering the dictionary for the
         calibration parameters, then calling adjust_strain.
@@ -52,7 +52,9 @@ class Recalibrate(object):
         Parameters
         ----------
         strain : FrequencySeries
-                The strain to be recalibrated.
+            The strain to be recalibrated.
+        prefix: str
+            Prefix for calibration parameter names
         params : dict
             Dictionary of sampling parameters which includes
             calibration parameters.
@@ -62,7 +64,7 @@ class Recalibrate(object):
             The recalibrated strain.
         """
 
-        self.params.update({key[8:]: params[key] for key in params if key[:8] == 'recalib_'})
+        self.params.update({key[8:]: params[key] for key in params if key[:8] == prefix})
 
         strain_adjusted = self.apply_calibration(strain)
 
@@ -75,7 +77,24 @@ class CubicSpline(Recalibrate):
     name = 'cubic_spline'
 
     def __init__(self, minimum_frequency, maximum_frequency, n_points):
-        self.params = dict()
+        """
+        Cubic spline recalibration
+
+        see https://dcc.ligo.org/DocDB/0116/T1400682/001/calnote.pdf
+
+        This assumes the spline points follow
+        np.logspace(np.log(minimum_frequency), np.log(maximum_frequency), n_points)
+
+        Parameters
+        ----------
+        minimum_frequency: float
+            minimum frequency of spline points
+        maximum_frequency: float
+            maximum frequency of spline points
+        n_points: int
+            number of spline points
+        """
+        Recalibrate.__init__(self)
         self.n_points = n_points
         self.spline_points = np.logspace(np.log(minimum_frequency), np.log(maximum_frequency), n_points)
 
