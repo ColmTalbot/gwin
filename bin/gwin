@@ -34,6 +34,7 @@ import gwin
 from gwin import (__version__, burn_in, option_utils)
 from gwin.io.hdf import InferenceFile
 from gwin.option_utils import validate_checkpoint_files
+from gwin.calibration import Recalibrate
 
 # command line usage
 parser = argparse.ArgumentParser(usage=__file__ + " [--options]",
@@ -198,7 +199,7 @@ with ctx:
     # get ifo-specific instances of calibration model
     if cp.has_section('calibration'):
         logging.info("Initializing calibration model")
-        recalib = {ifo : strain.read_model_from_config(cp, ifo) for
+        recalib = {ifo : Recalibrate.from_config(cp, ifo, section='calibration') for
                    ifo in opts.instruments}
         model_args['recalib'] = recalib
 
