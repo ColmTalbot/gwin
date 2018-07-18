@@ -95,7 +95,7 @@ class Recalibrate(object):
         """
         all_params = dict(cp.items(section))
         params = {key[3:]: all_params[key] for key in all_params if ifo in key}
-        model = params.pop('{}-name'.format(ifo))
+        model = params.pop('model')
 
         return all_models[model](**params)
 
@@ -123,6 +123,9 @@ class CubicSpline(Recalibrate):
             number of spline points
         """
         Recalibrate.__init__(self)
+        minimum_frequency = float(minimum_frequency)
+        maximum_frequency = float(maximum_frequency)
+        n_points = int(n_points)
         self.n_points = n_points
         self.spline_points = np.logspace(np.log(minimum_frequency), np.log(maximum_frequency), n_points)
 
