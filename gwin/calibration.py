@@ -19,6 +19,7 @@
 import numpy as np
 from scipy.interpolate import UnivariateSpline
 from pycbc.types import FrequencySeries
+import logging
 
 
 class Recalibrate(object):
@@ -80,7 +81,7 @@ class CubicSpline(Recalibrate):
         """
         Cubic spline recalibration
 
-        see https://dcc.ligo.org/DocDB/0116/T1400682/001/calnote.pdf
+        see https://dcc.ligo.org/LIGO-T1400682/public
 
         This assumes the spline points follow
         np.logspace(np.log(minimum_frequency), np.log(maximum_frequency), n_points)
@@ -99,6 +100,9 @@ class CubicSpline(Recalibrate):
         self.spline_points = np.logspace(np.log(minimum_frequency), np.log(maximum_frequency), n_points)
 
     def apply_calibration(self, strain):
+        if n_points < 5:
+	        logging.warn('Use at least 5 spline points for calibration model')
+
         amplitude_parameters = [self.params['amplitude_{}'.format(ii)] for ii in range(self.n_points)]
         amplitude_spline = UnivariateSpline(self.spline_points, amplitude_parameters)
         delta_amplitude = amplitude_spline(strain.sample_frequencies.numpy())
