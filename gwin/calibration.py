@@ -24,9 +24,11 @@ import logging
 
 class Recalibrate(object):
 
-    def __init__(self):
+    name = 'none'
+
+    def __init__(self, ifo_name):
+        self.ifo_name = ifo_name
         self.params = dict()
-        pass
 
     def apply_calibration(self, strain):
         """Apply calibration model
@@ -65,11 +67,39 @@ class Recalibrate(object):
             The recalibrated strain.
         """
 
-        self.params.update({key[8:]: params[key] for key in params if key[:8] == prefix})
+        self.params.update({key[len(prefix):]: params[key]
+                            for key in params if prefix in key and self.ifo_name in key})
 
         strain_adjusted = self.apply_calibration(strain)
 
         return strain_adjusted
+
+    @classmethod
+    def from_config(cls, cp, ifo, section):
+        """Read a config file to get calibration options and transfer
+        functions which will be used to intialize the model.
+
+        Parameters
+        ----------
+        cp : WorkflowConfigParser
+            An open config file.
+        ifo : string
+            The detector (H1, L1) for which the calibration model will
+            be loaded.
+        section : string
+            The section name in the config file from which to retrieve
+            the calibration options.
+        Return
+        ------
+        instance
+            An instance of the class.
+        """
+        all_params = dict(cp.items(section))
+        params = {key[3:]: all_params[key] for key in all_params if ifo.lower() in key}
+        model = params.pop('model')
+        params['ifo_name'] = ifo.lower()
+
+        return all_models[model](**params)
 
 
 class CubicSpline(Recalibrate):
@@ -77,7 +107,7 @@ class CubicSpline(Recalibrate):
     # spline model from https://dcc.ligo.org/LIGO-T1400682/public
     name = 'cubic_spline'
 
-    def __init__(self, minimum_frequency, maximum_frequency, n_points):
+    def __init__(self, minimum_frequency, maximum_frequency, n_points, ifo_name):
         """
         Cubic spline recalibration
 
@@ -95,7 +125,10 @@ class CubicSpline(Recalibrate):
         n_points: int
             number of spline points
         """
-        Recalibrate.__init__(self)
+        Recalibrate.__init__(self, ifo_name=ifo_name)
+        minimum_frequency = float(minimum_frequency)
+        maximum_frequency = float(maximum_frequency)
+        n_points = int(n_points)
         self.n_points = n_points
         self.spline_points = np.logspace(np.log(minimum_frequency), np.log(maximum_frequency), n_points)
 
@@ -103,11 +136,13 @@ class CubicSpline(Recalibrate):
         if n_points < 5:
 	        logging.warn('Use at least 5 spline points for calibration model')
 
-        amplitude_parameters = [self.params['amplitude_{}'.format(ii)] for ii in range(self.n_points)]
+        amplitude_parameters = [self.params['amplitude_{}_{}'.format(self.ifo_name, ii)]
+                                for ii in range(self.n_points)]
         amplitude_spline = UnivariateSpline(self.spline_points, amplitude_parameters)
         delta_amplitude = amplitude_spline(strain.sample_frequencies.numpy())
 
-        phase_parameters = [self.params['phase_{}'.format(ii)] for ii in range(self.n_points)]
+        phase_parameters = [self.params['phase_{}_{}'.format(self.ifo_name, ii)]
+                            for ii in range(self.n_points)]
         phase_spline = UnivariateSpline(self.spline_points, phase_parameters)
         delta_phase = phase_spline(strain.sample_frequencies.numpy())
 
@@ -115,3 +150,8 @@ class CubicSpline(Recalibrate):
 
         return strain_adjusted
 
+
+all_models = {
+    Recalibrate.name: Recalibrate,
+    CubicSpline.name: CubicSpline
+}
