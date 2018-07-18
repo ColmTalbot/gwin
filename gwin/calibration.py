@@ -34,11 +34,11 @@ class Recalibrate(object):
 
         Parameters
         ----------
-        strain: FrequencySeries
+        strain : FrequencySeries
             The strain to be recalibrated.
 
-        Returns
-        -------
+        Return
+        ------
         strain_adjusted : FrequencySeries
             The recalibrated strain.
         """
@@ -99,6 +99,7 @@ class Recalibrate(object):
 
 class CubicSpline(Recalibrate):
 
+    # spline model from https://dcc.ligo.org/LIGO-T1400682/public
     name = 'cubic_spline'
 
     def __init__(self, minimum_frequency, maximum_frequency, n_points):
@@ -132,7 +133,7 @@ class CubicSpline(Recalibrate):
         phase_spline = UnivariateSpline(self.spline_points, phase_parameters)
         delta_phase = phase_spline(strain.sample_frequencies.numpy())
 
-        strain_adjusted = strain * (1 + delta_amplitude) * (2 + 1j * delta_phase) / (2 - 1j * delta_phase)
+        strain_adjusted = strain * (1.0 + delta_amplitude) * (2.0 + 1j * delta_phase) / (2.0 - 1j * delta_phase)
 
         return strain_adjusted
 
