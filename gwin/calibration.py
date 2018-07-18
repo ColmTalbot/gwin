@@ -74,7 +74,7 @@ class CubicSpline(Recalibrate):
     name = 'cubic_spline'
 
     def __init__(self, minimum_frequency, maximum_frequency, n_points):
-        self.params = dict()
+        Recalibrate.__init__(self)
         self.n_points = n_points
         self.spline_points = np.logspace(np.log(minimum_frequency), np.log(maximum_frequency), n_points)
 
