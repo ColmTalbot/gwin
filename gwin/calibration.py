@@ -93,6 +93,7 @@ class Recalibrate(object):
         """
         all_params = dict(cp.items(section))
         params = {key[3:]: all_params[key] for key in all_params if ifo in key}
+        params.pop('{}-name'.format(ifo))
 
         return cls(**params)
 
