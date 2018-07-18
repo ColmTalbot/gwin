@@ -76,6 +76,23 @@ class CubicSpline(Recalibrate):
     name = 'cubic_spline'
 
     def __init__(self, minimum_frequency, maximum_frequency, n_points):
+        """
+        Cubic spline recalibration
+
+        see https://dcc.ligo.org/DocDB/0116/T1400682/001/calnote.pdf
+
+        This assumes the spline points follow
+        np.logspace(np.log(minimum_frequency), np.log(maximum_frequency), n_points)
+
+        Parameters
+        ----------
+        minimum_frequency: float
+            minimum frequency of spline points
+        maximum_frequency: float
+            maximum frequency of spline points
+        n_points: int
+            number of spline points
+        """
         Recalibrate.__init__(self)
         self.n_points = n_points
         self.spline_points = np.logspace(np.log(minimum_frequency), np.log(maximum_frequency), n_points)
