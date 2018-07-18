@@ -133,8 +133,7 @@ class CubicSpline(Recalibrate):
         self.spline_points = np.logspace(np.log(minimum_frequency), np.log(maximum_frequency), n_points)
 
     def apply_calibration(self, strain):
-        if n_points < 5:
-	        logging.warn('Use at least 5 spline points for calibration model')
+            logging.warn('Use at least 5 spline points for calibration model')
 
         amplitude_parameters = [self.params['amplitude_{}_{}'.format(self.ifo_name, ii)]
                                 for ii in range(self.n_points)]
