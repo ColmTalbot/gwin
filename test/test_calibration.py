@@ -67,3 +67,10 @@ def test_instantiation_from_config(name, parameters):
         cp.set('test', '{}_{}'.format(ifo_name, key), parameters[key])
     from_config = calibration.Recalibrate.from_config(cp, ifo_name, 'test')
     assert all([from_config.name == name, from_config.ifo_name == ifo_name])
+
+
+def test_too_few_spline_points_fails():
+    with pytest.raises(ValueError):
+        calibration.CubicSpline(
+            ifo_name='test', minimum_frequency=10,
+            maximum_frequency=1024, n_points=3)
