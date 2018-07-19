@@ -96,7 +96,7 @@ class Recalibrate(object):
             An instance of the class.
         """
         all_params = dict(cp.items(section))
-        params = {key[3:]: all_params[key]
+        params = {key[len(ifo)+1:]: all_params[key]
                   for key in all_params if ifo.lower() in key}
         model = params.pop('model')
         params['ifo_name'] = ifo.lower()
