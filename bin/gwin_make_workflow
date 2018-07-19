@@ -94,7 +94,7 @@ parser.add_argument("--gps-end-time", type=float, nargs="+", default=None,
                          "this option is ignored.")
 
 # input configuration file options
-parser.add_argument("--inference-config-file", type=str, required=True,
+parser.add_argument("--inference-config-file", type=str, nargs='+', required=True,
                     help="workflow.WorkflowConfigParser parsable file with "
                          "proir information.")
 parser.add_argument("--prior-section", type=str, default="prior",
