@@ -29,7 +29,6 @@ use('agg')
 from matplotlib import pyplot as plt
 
 from pycbc import (distributions, results)
-from pycbc.results import metadata
 from pycbc.workflow import WorkflowConfigParser
 
 from gwin import __version__
@@ -50,10 +49,6 @@ parser.add_argument("--config-files", type=str, nargs="+", required=True,
     help="A file parsable by pycbc.workflow.WorkflowConfigParser.")
 parser.add_argument("--sections", type=str, nargs="+", default=["prior"],
     help="Name of section plus subsection with distribution configurations, eg. prior-mass1.")
-
-# add prior options
-parser.add_argument("--bins", type=int, default=20,
-    help="Number of points to grid a parameter. Need at least 20 bins to fill in the plot.")
 
 # add output options
 parser.add_argument("--output-file", type=str, required=True,
