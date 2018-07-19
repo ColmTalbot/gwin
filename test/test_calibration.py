@@ -3,7 +3,6 @@ import pytest
 from gwin import calibration
 import numpy as np
 from pycbc.workflow.configuration import WorkflowConfigParser
-import ConfigParser
 
 
 @pytest.fixture
