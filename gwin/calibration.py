@@ -134,7 +134,8 @@ class CubicSpline(Recalibrate):
         maximum_frequency = float(maximum_frequency)
         n_points = int(n_points)
         if n_points < 4:
-            raise ValueError('Use at least 4 spline points for calibration model')
+            raise ValueError(
+                'Use at least 4 spline points for calibration model')
         self.n_points = n_points
         self.spline_points = np.logspace(np.log(minimum_frequency),
                                          np.log(maximum_frequency), n_points)
