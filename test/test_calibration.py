@@ -13,8 +13,12 @@ def strain():
     return calibration.FrequencySeries(strain_array, delta_f)
 
 
+def test_cannot_instantiate_base_class():
+    with pytest.raises(TypeError):
+        calibration.Recalibrate('test')
+
+
 @pytest.mark.parametrize("name, params", [
-    ('none', dict(ifo_name='test')),
     ('cubic_spline', dict(ifo_name='test',
                           minimum_frequency=10,
                           maximum_frequency=1024,
@@ -26,7 +30,6 @@ def test_instantiation(name, params):
 
 
 @pytest.mark.parametrize("name, init_params, dict_params", [
-    ('none', dict(ifo_name='test'), dict()),
     ('cubic_spline',
      dict(ifo_name='test', minimum_frequency=10,
           maximum_frequency=1024, n_points=5),
@@ -54,7 +57,6 @@ def test_update_parameters(name, init_params, dict_params):
 
 
 @pytest.mark.parametrize("name, parameters", [
-    ('none', dict()),
     ('cubic_spline', dict(minimum_frequency='10', maximum_frequency='1024',
                           n_points='5'))
 ])

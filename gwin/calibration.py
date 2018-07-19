@@ -19,17 +19,18 @@
 import numpy as np
 from scipy.interpolate import UnivariateSpline
 from pycbc.types import FrequencySeries
-import logging
+from abc import (ABCMeta, abstractmethod)
 
 
 class Recalibrate(object):
-
-    name = 'none'
+    __metaclass__ = ABCMeta
+    name = None
 
     def __init__(self, ifo_name):
         self.ifo_name = ifo_name
         self.params = dict()
 
+    @abstractmethod
     def apply_calibration(self, strain):
         """Apply calibration model
 
@@ -45,7 +46,7 @@ class Recalibrate(object):
         strain_adjusted : FrequencySeries
             The recalibrated strain.
         """
-        return strain
+        pass
 
     def map_to_adjust(self, strain, prefix='recalib_', **params):
         """Map an input dictionary of sampling parameters to the
@@ -105,8 +106,6 @@ class Recalibrate(object):
 
 
 class CubicSpline(Recalibrate):
-
-    # spline model from https://dcc.ligo.org/LIGO-T1400682/public
     name = 'cubic_spline'
 
     def __init__(self, minimum_frequency, maximum_frequency, n_points,
@@ -175,6 +174,5 @@ class CubicSpline(Recalibrate):
 
 
 all_models = {
-    Recalibrate.name: Recalibrate,
     CubicSpline.name: CubicSpline
 }
