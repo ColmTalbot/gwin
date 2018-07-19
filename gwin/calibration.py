@@ -137,8 +137,8 @@ class CubicSpline(Recalibrate):
             raise ValueError(
                 'Use at least 4 spline points for calibration model')
         self.n_points = n_points
-        self.spline_points = np.logspace(np.log(minimum_frequency),
-                                         np.log(maximum_frequency), n_points)
+        self.spline_points = np.logspace(np.log10(minimum_frequency),
+                                         np.log10(maximum_frequency), n_points)
 
     def apply_calibration(self, strain):
         """Apply calibration model
