@@ -67,9 +67,9 @@ class Recalibrate(object):
             The recalibrated strain.
         """
 
-        self.params.update({key[len(prefix):]: params[key]
-                            for key in params if prefix in key
-                            and self.ifo_name in key})
+        self.params.update({
+            key[len(prefix):]: params[key]
+            for key in params if prefix in key and self.ifo_name in key})
 
         strain_adjusted = self.apply_calibration(strain)
 
