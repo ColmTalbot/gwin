@@ -88,7 +88,9 @@ The model and parameters describing the calibration uncertainty can be passed in
 Generate the workflow
 =====================
 
-To generate a workflow you will need your configuration files. We set the following enviroment variables for this example::
+To generate a workflow you will need your configuration files.
+The workflow creates a single config file ``inference.ini`` from all the files specified in ``INFERENCE_CONFIG_PATH``.
+We set the following enviroment variables for this example::
 
     # name of the workflow
     WORKFLOW_NAME="r1"
@@ -98,7 +100,7 @@ To generate a workflow you will need your configuration files. We set the follow
 
     # input configuration files
     CONFIG_PATH=workflow.ini
-    INFERENCE_CONFIG_PATH=gwin.ini
+    INFERENCE_CONFIG_PATH="gwin.ini calibration.ini"
 
 Specify a directory to save the HTML pages::
 
