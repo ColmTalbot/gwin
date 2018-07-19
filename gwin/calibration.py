@@ -46,7 +46,7 @@ class Recalibrate(object):
         strain_adjusted : FrequencySeries
             The recalibrated strain.
         """
-        pass
+        return
 
     def map_to_adjust(self, strain, prefix='recalib_', **params):
         """Map an input dictionary of sampling parameters to the
