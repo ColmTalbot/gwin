@@ -549,7 +549,7 @@ class MarginalizedPhaseGaussianNoise(GaussianNoise):
                     h[self._kmin:kmax])
             # store
             setattr(self._current_stats, '{}_optimal_snrsq'.format(det), hh_i)
-            # XXX: is it possible to store a something like cplx_loglr for
+            # TODO: is it possible to store a something like cplx_loglr for
             # each detector?
             hh += hh_i
             hd += hd_i
