@@ -1,5 +1,5 @@
 from ConfigParser import ConfigParser
-from . import calibration
+from pycbc.strain import models
 
 
 def calibration_config_expander(input_file, output_file=None):
@@ -31,7 +31,7 @@ def calibration_config_expander(input_file, output_file=None):
 
     for ifo in interferometer_names:
         calib_model = calib_items['{}_model'.format(ifo)]
-        if calib_model not in calibration.all_models:
+        if calib_model not in models:
             raise(ValueError,
                   'Calibration model "{}" not implemented.'.format(calib_model))
 
@@ -41,6 +41,7 @@ def calibration_config_expander(input_file, output_file=None):
             means = dict()
             if '{}_calibration_envelope'.format(ifo) in calib_items:
                 # FIXME: Allow reading of calibration envelope.
+                # this needs a function that knows about the format of the file
                 raise(RuntimeError,
                       'Reading calibration envelope not yet implemented.')
 
@@ -72,13 +73,3 @@ def calibration_config_expander(input_file, output_file=None):
             config.write(ff)
 
     return config
-
-
-    # enable-spline-calibration =
-    # spcal-nodes = 9
-    # H1-spcal-envelope = /home/carl-johan.haster/projects/O1/CalibrationUncertanties/H1_uncertanties/May-01-2017_O1_LHO_RelativeResponseUncertainty_FinalResults_1128347177.txt
-    # L1-spcal-envelope = /home/carl-johan.haster/projects/O1/CalibrationUncertanties/L1_uncertanties/May-01-2017_O1_LLO_RelativeResponseUncertainty_FinalResults_1128343692.txt
-    # H1-spcal-amp-uncertainty = 0.04
-    # L1-spcal-amp-uncertainty = 0.03
-    # H1-spcal-phase-uncertainty = 2.5
-    # L1-spcal-phase-uncertainty = 2.0
